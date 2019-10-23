@@ -1,5 +1,5 @@
 import exceptions._
-import scala.collection.mutable
+import scala.collection.mutable.Queue
 
 object TransactionStatus extends Enumeration {
   val SUCCESS, PENDING, FAILED = Value
@@ -10,8 +10,8 @@ class TransactionQueue {
     var transactions = Queue[Transaction]()
 
     // Remove and return the first element from the queue
-    def pop: Transaction = synchronized {
-      while (isEmpty()) {
+    def pop: Transaction = this.synchronized {
+      while (isEmpty) {
         wait()
       }
       transactions.dequeue()
@@ -21,7 +21,7 @@ class TransactionQueue {
     def isEmpty: Boolean = transactions.isEmpty
 
     // Add new element to the back of the queue
-    def push(t: Transaction): Unit = synchronized {
+    def push(t: Transaction): Unit = this.synchronized {
       transactions.enqueue(t)
       notifyAll()
     }
