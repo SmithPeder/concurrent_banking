@@ -7,24 +7,30 @@ object TransactionStatus extends Enumeration {
 
 class TransactionQueue {
 
-    // TODO
-    // project task 1.1
-    // Add datastructure to contain the transactions
+    var transactions = Queue[Transaction]()
 
     // Remove and return the first element from the queue
-    def pop: Transaction = ???
+    def pop: Transaction = synchronized {
+      while (isEmpty()) {
+        wait()
+      }
+      transactions.dequeue()
+    }
 
     // Return whether the queue is empty
-    def isEmpty: Boolean = ???
+    def isEmpty: Boolean = transactions.isEmpty
 
     // Add new element to the back of the queue
-    def push(t: Transaction): Unit = ???
+    def push(t: Transaction): Unit = synchronized {
+      transactions.enqueue(t)
+      notifyAll()
+    }
 
     // Return the first element from the queue without removing it
-    def peek: Transaction = ???
+    def peek: Transaction = transactions.head
 
     // Return an iterator to allow you to iterate over the queue
-    def iterator: Iterator[Transaction] = ???
+    def iterator: Iterator[Transaction] = transactions.iterator
 }
 
 class Transaction(val transactionsQueue: TransactionQueue,
