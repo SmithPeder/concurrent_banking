@@ -46,10 +46,16 @@ class Transaction(val transactionsQueue: TransactionQueue,
   override def run: Unit = {
 
       def doTransaction() = {
-          // TODO - project task 3
-          // Extend this method to satisfy requirements.
-          from withdraw amount
-          to deposit amount
+        from.withdraw(amount) match {
+          case Left(x) => 
+            to.deposit(amount)
+            status = TransactionStatus.SUCCESS;
+          case Right(_) => 
+            attempt += 1
+        }
+        if (attempt == allowedAttemps){
+          status = TransactionStatus.FAILED
+        }
       }
 
       // TODO - project task 3

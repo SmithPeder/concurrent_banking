@@ -20,9 +20,9 @@ class Account(val bank: Bank, initialBalance: Double) {
       }
     }
 
-    def deposit (amount: Double): Either[Unit, String] = this.synchronized {
+    def deposit(amount: Double): Either[Unit, String] = this.synchronized {
       // New balance is equal to old balance pluss the amount we deposit
-      if ( amount <= 0 ) {
+      if (amount <= 0 ) {
         Right("Amount can't be under/or 0")
       } else {
         balance.amount = getBalanceAmount + amount
