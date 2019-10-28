@@ -44,28 +44,24 @@ class Transaction(val transactionsQueue: TransactionQueue,
   var attempt = 0
 
   override def run: Unit = {
-
-      def doTransaction() = {
-        from.withdraw(amount) match {
-          case Left(x) => 
-            to.deposit(amount)
-            status = TransactionStatus.SUCCESS;
-          case Right(_) => 
-            attempt += 1
-        }
-        if (attempt == allowedAttemps){
-          status = TransactionStatus.FAILED
-        }
+    def doTransaction() = {
+      from.withdraw(amount) match {
+        case Left(x) =>
+          to.deposit(amount)
+          status = TransactionStatus.SUCCESS;
+        case Right(_) =>
+          attempt += 1
       }
+      if (attempt == allowedAttemps){
+        status = TransactionStatus.FAILED
+      }
+    }
 
-      // TODO - project task 3
-      // make the code below thread safe
+    this.synchronized {
       if (status == TransactionStatus.PENDING) {
           doTransaction
-          Thread.sleep(50) // you might want this to make more room for
-                           // new transactions to be added to the queue
+          Thread.sleep(50)
       }
-
-
     }
+  }
 }
