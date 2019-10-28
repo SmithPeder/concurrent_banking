@@ -13,7 +13,7 @@ class Account(val bank: Bank, initialBalance: Double) {
       else if (getBalanceAmount >= amount) {
         // New balance is equal to old balance minus the amount we withdraw
         balance.amount = getBalanceAmount - amount
-        Left(null)
+        Left(())
       }
       else {
         Right("To little funds")
@@ -26,7 +26,7 @@ class Account(val bank: Bank, initialBalance: Double) {
         Right("Amount can't be under/or 0")
       } else {
         balance.amount = getBalanceAmount + amount
-        Left(null)
+        Left(())
       }
     }
     def getBalanceAmount: Double = balance.amount
