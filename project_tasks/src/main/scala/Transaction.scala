@@ -7,6 +7,7 @@ object TransactionStatus extends Enumeration {
 
 class TransactionQueue {
 
+    // A Queue of transactions
     var transactions = Queue[Transaction]()
 
     // Remove and return the first element from the queue
@@ -33,6 +34,8 @@ class TransactionQueue {
     def iterator: Iterator[Transaction] = transactions.iterator
 }
 
+
+// Represents one Transaction
 class Transaction(val transactionsQueue: TransactionQueue,
                   val processedTransactions: TransactionQueue,
                   val from: Account,
@@ -44,6 +47,16 @@ class Transaction(val transactionsQueue: TransactionQueue,
   var attempt = 0
 
   override def run: Unit = {
+    /* DoTransaction
+     *
+     * Will execute one transaction. It will withdraw the amount from one account,
+     * then, if there are no errors, it will deposit it into another account.
+     *
+     * It will set the transaction to SUCCESS, FAILED or PENDING.
+     *
+     * If the transaction reaches the maximum number og allow attempts it will be
+     * deemed a failure.
+     */
     def doTransaction() = {
       from.withdraw(amount) match {
         case Left(x) =>
